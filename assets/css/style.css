@@ -9,6 +9,148 @@
     list-style: none;
 }
 
+:root {
+    --bg-color: #f2f2f2;
+    --main-color: #fff;
+    --deep-blue: #2b6777;
+    --light-blue: #cbd8e4;
+    --green: #52ab98;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
+    background-color: var(--bg-color);
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 1rem;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    color: var(--deep-blue);
+    padding-left: 2rem;
+}
+
+.icon i {
+    font-size: 3rem;
+}
+
+header form {
+    padding-right: 2rem;
+    display: flex;
+    align-items: center;
+    gap: .7rem;
+}
+
+header form input {
+    font-size: 1rem;
+    max-width: 8rem;
+    padding: .5rem;
+    border-radius: 2rem;
+    text-align: center
+}
+
+header form button {
+    font-size: 1.7rem;
+    padding-top: .3rem;
+    cursor: pointer;
+    color: var(--deep-blue);
+}
+
+.app {
+    position: relative;
+    margin: 4rem auto;
+    max-width: 100rem;
+    display: grid;
+    grid-template-columns: 4fr 3fr;
+    grid-template-rows: auto repeat(3, 15rem) auto;
+    gap: 2rem;
+    transition: all 1s;
+
+}
+
+.balance {
+    grid-column: 1 / span 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    margin-bottom: 2rem;
+}
+
+p {
+    display: block;
+    margin-block-start: 1em;
+    margin-block-end: 1em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+}
+
+.transaction_container {
+    grid-row: 2;
+    background-color: var(--main-color);
+    border-radius: 1rem;
+    overflow: scroll;
+}
+
+.transaction {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 2.2rem 4rem;
+    border-bottom: 1px solid var(--bg-color);
+}
+
+.transaction_type {
+    color: var(--main-color);
+    border-radius: 10rem;
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 700;
+    padding: .1rem 1rem;
+    margin-right: 2rem;
+}
+
+.transaction_type_deposit {
+    background-color: var(--green);
+}
+
+.transaction_type_withdrawal {
+    background-color: var(--deep-blue);
+}
+
+.transaction_date {
+    font-size: 1rem;
+    text-transform: uppercase;
+    color: var(--light-blue);
+}
+
+.transaction_value {
+    font-size: 1.7rem;
+    margin-left: auto;
+}
+
+.transaction_forms {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.summary {
+    grid-row: 5 / 6;
+    display: flex;
+    align-items: baseline;
+    padding: 0 .3rem;
+    margin-top: 1rem;
+}
+
+.sort {
+    margin-left: auto;
+    border: none;
+    background: none;
+    font-size: 1.3rem;
+    cursor: pointer;
 }

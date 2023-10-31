@@ -5,51 +5,71 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./assets/css/style.css">
+    <!-- Boxicons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://unpkg.com/boxicons@2.1.4/dist/boxicons.js"></script>
     <title>Banking App</title>
 </head>
 
 <body>
     <header>
-        <h1 class="heading">Welcome Message</h1>
-        <div class="icon"></div>
+        <h1 class="heading">Login to start banking</h1>
+        <div class="icon">
+            <i class='bx bxs-bank'></i>
+        </div>
         <form action="">
             <input type="text" placeholder="username">
             <input type="password" placeholder="pin">
+            <button type="submit">
+                <i class='bx bx-right-arrow-alt'></i>
+            </button>
         </form>
     </header>
-    <div class="app">
+    <main class="app">
 
         <div class="balance">
-            <p>Current balance as of <br>
-                Todays date</p>
-            <h2>€ 25,000</h2>
+            <div>
+                <p class="balance_label">Current balance</p>
+                <p class="balance_date">As of 31/10/2023, 17:52</p>
+            </div>
+            
+            <h2 class="balance_value">€ 25,000</h2>
         </div>
 
-        <div>
-            <div class="transaction_container">
-                <div class="transaction">
-                    <p>Movement</p>
-                    <p>Date</p>
-                    <p>Amount</p>
-                </div>
+        <div class="transaction_container">
+            <div class="transaction">
+                <p class="transaction_type transaction_type_deposit">1 Deposit</p>
+                <p class="transaction_date">22/12/1999</p>
+                <p class="transaction_amount">€ 10,000</p>
             </div>
-
-            <div class="transaction_forms">
-                <form action="" class="transfer">Transfer Money</form>
-                <form action="" class="loan">Request Loan</form>
-                <form action="" class="close_acc">Close Out Account</form>
+            <div class="transaction">
+                <p class="transaction_type transaction_type_withdrawal">2 Withdrawal</p>
+                <p class="transaction_date">22/12/1999</p>
+                <p class="transaction_amount">€ 10,000</p>
             </div>
         </div>
 
         <div class="summary">
-            <p>In €26,000</p>
-            <p>Out €500</p>
-            <p>Interest €500</p>
-            <button class="sort"></button>
+            <p class="summary_label">In</p>
+            <p class="summary_value summary_value_in">€26,000</p>
+            <p class="summary_label">Out</p>
+            <p class="summary_value summary_value_out">€500</p>
+            <p class="summary_label">Interest</p>
+            <p class="summary_value summary_value_interest">€500</p>
+            <button class="sort">
+                <i class='bx bx-down-arrow-alt'></i>Sort
+            </button>
         </div>
+
+        <div class="transaction_forms">
+            <form action="" class="operation operation_transfer">Transfer Money</form>
+            <form action="" class="operation operation_loan">Request Loan</form>
+            <form action="" class="operation operation_close_acc">Close Out Account</form>
+        </div>
+    
         <p>You will be logged out in...</p>
 
-    </div>
+    </main>
 
     <script src="./assets/js/sctipt.js"></script>
 </body>
