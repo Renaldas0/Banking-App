@@ -18,9 +18,9 @@
             <i class='bx bxs-bank'></i>
         </div>
         <form action="">
-            <input type="text" placeholder="username">
-            <input type="password" placeholder="pin">
-            <button type="submit">
+            <input type="text" placeholder="username" class="login_input login_input_user">
+            <input type="password" placeholder="pin" class="login_input login_input_pin">
+            <button type="submit" class="login_btn">
                 <i class='bx bx-right-arrow-alt'></i>
             </button>
         </form>
@@ -29,7 +29,7 @@
 
         <div class="balance">
             <div>
-                <p class="balance_label">Balance: <span class="balance_value">€ 25,000</span></p>
+                <p class="balance_label">Balance: <span class="balance_amount">€ 25,000</span></p>
                 <p class="balance_date">As of 31/10/2023, 17:52</p>
             </div>
         </div>
@@ -64,11 +64,11 @@
 
         <div class="summary">
             <p class="summary_label">In</p>
-            <p class="summary_value summary_value_in">€26,000</p>
+            <p class="summary_value summary_amount_in">€26,000</p>
             <p class="summary_label">Out</p>
-            <p class="summary_value summary_value_out">€500</p>
+            <p class="summary_value summary_amount_out">€500</p>
             <p class="summary_label">Interest</p>
-            <p class="summary_value summary_value_interest">€500</p>
+            <p class="summary_value summary_amount_interest">€500</p>
             <button class="sort">
                 <i class='bx bx-down-arrow-alt'></i>Sort
             </button>
@@ -99,8 +99,8 @@
         <div class="operation_container close_container">
             <h3>Close Account</h3>
             <form action="" class="operation form_close_acc">
-                <input type="text" class="form_input form_input_user">
-                <input type="number" class="form_input form_input_pin">
+                <input type="text" class="form_input form_close_user">
+                <input type="password" class="form_input form_close_pin">
                 <button class="form_btn form_btn_close">
                     <i class='bx bx-right-arrow-alt'></i>
                 </button>

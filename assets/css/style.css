@@ -15,6 +15,7 @@
     --deep-blue: #2b6777;
     --light-blue: #cbd8e4;
     --green: #52ab98;
+    --dark-font: #333;
 }
 
 body {
@@ -85,6 +86,10 @@ header form button {
     font-size: 2.4rem;
 }
 
+.balance_amount {
+    font-weight: 700;
+}
+
 p {
     display: block;
     margin-block-start: .5em;
@@ -128,12 +133,13 @@ p {
 .transaction_date {
     font-size: 1rem;
     text-transform: uppercase;
-    color: var(--light-blue);
+    color: var(--dark-font);
 }
 
-.transaction_value {
-    font-size: 1.7rem;
+.transaction_amount {
+    font-size: 1.3rem;
     margin-left: auto;
+    font-weight: 700;
 }
 
 .summary {
@@ -176,14 +182,14 @@ p {
 .operation_container {
     border-radius: 1rem;
     padding: 2.5rem 3.5rem;
-    color: #333;
+    color: var(--dark-font);
 }
 
 .operation_container h3 {
     margin-bottom: 1.5rem;
     font-size: 1.5rem;
     font-weight: 700;
-    color: #333;
+    color: var(--dark-font);
 }
 
 .transfer_container {
