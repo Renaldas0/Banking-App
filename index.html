@@ -29,16 +29,29 @@
 
         <div class="balance">
             <div>
-                <p class="balance_label">Current balance</p>
+                <p class="balance_label">Balance: <span class="balance_value">€ 25,000</span></p>
                 <p class="balance_date">As of 31/10/2023, 17:52</p>
             </div>
-            
-            <h2 class="balance_value">€ 25,000</h2>
         </div>
 
         <div class="transaction_container">
             <div class="transaction">
                 <p class="transaction_type transaction_type_deposit">1 Deposit</p>
+                <p class="transaction_date">22/12/1999</p>
+                <p class="transaction_amount">€ 10,000</p>
+            </div>
+            <div class="transaction">
+                <p class="transaction_type transaction_type_withdrawal">2 Withdrawal</p>
+                <p class="transaction_date">22/12/1999</p>
+                <p class="transaction_amount">€ 10,000</p>
+            </div>
+            <div class="transaction">
+                <p class="transaction_type transaction_type_withdrawal">2 Withdrawal</p>
+                <p class="transaction_date">22/12/1999</p>
+                <p class="transaction_amount">€ 10,000</p>
+            </div>
+            <div class="transaction">
+                <p class="transaction_type transaction_type_withdrawal">2 Withdrawal</p>
                 <p class="transaction_date">22/12/1999</p>
                 <p class="transaction_amount">€ 10,000</p>
             </div>
@@ -61,13 +74,42 @@
             </button>
         </div>
 
-        <div class="transaction_forms">
-            <form action="" class="operation operation_transfer">Transfer Money</form>
-            <form action="" class="operation operation_loan">Request Loan</form>
-            <form action="" class="operation operation_close_acc">Close Out Account</form>
+        <div class="operation_container transfer_container">
+            <h3>Transfer Money</h3>
+            <form action="" class="operation form_transfer">
+                <input type="text" class="form_input form_input_to">
+                <input type="number" class="form_input form_input_amount">
+                <button class="form_btn form_btn_transfer">
+                    <i class='bx bx-right-arrow-alt'></i>
+                </button>
+                <label class="form_label">Transfer to</label>
+                <label class="form_label">Amount</label>
+            </form>
         </div>
-    
-        <p>You will be logged out in...</p>
+        <div class="operation_container loan_container">
+            <h3>Request Loan</h3>
+            <form action="" class="operation form_loan">
+                <input type="number" class="form_input form_input_loan_amount">
+                <button class="form_btn form_btn_loan">
+                    <i class='bx bx-right-arrow-alt'></i>
+                </button>
+                <label class="form_label form_label_loan">Amount</label>
+            </form>
+        </div>
+        <div class="operation_container close_container">
+            <h3>Close Account</h3>
+            <form action="" class="operation form_close_acc">
+                <input type="text" class="form_input form_input_user">
+                <input type="number" class="form_input form_input_pin">
+                <button class="form_btn form_btn_close">
+                    <i class='bx bx-right-arrow-alt'></i>
+                </button>
+                <label class="form_label">Confirm user</label>
+                <label class="form_label">Confirm PIN</label>
+            </form>
+        </div>
+
+        <p class="logout_timer">You will be logged out in...<span class="timer">7:23</span></p>
 
     </main>
 
