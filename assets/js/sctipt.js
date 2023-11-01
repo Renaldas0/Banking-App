@@ -1,6 +1,7 @@
 'use strict'
 
 const app = document.querySelector('.app');
+const welcomeMsg = document.querySelector('.heading');
 const loginInputUser = document.querySelector('.login_input_user');
 const loginInputPin = document.querySelector('.login_input_pin');
 const loginBtn = document.querySelector('.login_btn');
@@ -30,7 +31,7 @@ const formBtnClose = document.querySelector('.form_btn_close');
 
 const account1 = {
     name: 'Renaldas Bendikas',
-    currency: 'EUR',
+    currency: '€',
     pin: 1111,
     transactions: [1000, -260, 2560, -400, 100, 250, -50, -45, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
@@ -40,7 +41,7 @@ const account1 = {
 };
 const account2 = {
     name: 'Dwayne Johnson',
-    currency: 'USD',
+    currency: '$',
     pin: 2222,
     transactions: [1000, -260, 2560, -400, -50, -45, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
@@ -50,7 +51,7 @@ const account2 = {
 };
 const account3 = {
     name: 'Aurelia Wes',
-    currency: 'EUR',
+    currency: '€',
     pin: 3333,
     transactions: [-260, 250, -400, 100, 250, -50, -345, 800],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
@@ -60,7 +61,7 @@ const account3 = {
 };
 const account4 = {
     name: 'Denis James Stewart',
-    currency: 'AUD',
+    currency: '$',
     pin: 4444,
     transactions: [2000, -460, 560, -100, 370, 150, -150, -425, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
@@ -80,7 +81,6 @@ const createUsernames = function (accs) {
 };
 
 createUsernames(accounts);
-console.log(accounts);
 
 const displayTransactions = function (transactions) {
     transactionContainer.innerHTML = '';
@@ -92,31 +92,28 @@ const displayTransactions = function (transactions) {
         <div class="transaction">
                 <p class="transaction_type transaction_type_${type}">${i + 1} ${type}</p>
                 <p class="transaction_date">22/12/2023</p>
-                <p class="transaction_amount">€ ${tra}</p>
+                <p class="transaction_amount">${currentAccount.currency} ${tra}</p>
         </div>`;
 
         transactionContainer.insertAdjacentHTML('afterbegin', html);
     });
 };
 
-displayTransactions(account1.transactions);
-
 const calcDisplayBalance = function (transactions) {
     const balance = transactions.reduce((acc, curr) => acc + curr, 0);
-    balanceAmount.textContent = `€ ${balance}`;
+    balanceAmount.textContent = `${currentAccount.currency} ${balance}`;
 };
-calcDisplayBalance(account1.transactions);
 
 const calcDisplaySummary = function (transactions) {
     const incomes = transactions
         .filter(curr => curr > 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountIn.textContent = `€ ${incomes}`;
+    summaryAmountIn.textContent = `${currentAccount.currency} ${incomes}`;
 
     const expenses = transactions
         .filter(curr => curr < 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountOut.textContent = `€ ${Math.abs(expenses)}`;
+    summaryAmountOut.textContent = `${currentAccount.currency} ${Math.abs(expenses)}`;
 
     const interest = transactions
         .filter(tra => tra > 0)
@@ -126,7 +123,33 @@ const calcDisplaySummary = function (transactions) {
             return int >= 1;
         })
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountInterest.textContent = `€ ${interest}`;
+    summaryAmountInterest.textContent = `${currentAccount.currency} ${interest}`;
 }
 
-calcDisplaySummary(account1.transactions);
+// Event Handlers
+let currentAccount;
+
+const authenticateUser = function (event) {
+    event.preventDefault();
+
+    // Find the account with the entered username
+    currentAccount = accounts.find(acc => acc.username === loginInputUser.value);
+
+    if (currentAccount?.pin === Number(loginInputPin.value)) {
+        // Display UI and welcome message
+        welcomeMsg.textContent = `Welcome back ${currentAccount.name.split(' ')[0]}!`;
+        app.style.opacity = '100';
+
+        // Display transactions
+        displayTransactions(currentAccount.transactions);
+
+        // Display Balance
+        calcDisplayBalance(currentAccount.transactions);
+
+        // Display Summary
+        calcDisplaySummary(currentAccount.transactions);
+    } else {
+        alert('Incorrect details, account not found. Please try again')
+    }
+}
+loginBtn.addEventListener('click', authenticateUser);
