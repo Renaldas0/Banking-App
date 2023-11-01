@@ -140,6 +140,10 @@ const authenticateUser = function (event) {
         welcomeMsg.textContent = `Welcome back ${currentAccount.name.split(' ')[0]}!`;
         app.style.opacity = '100';
 
+        // Clear input fields
+        loginInputUser.value = loginInputPin.value = '';
+        loginInputPin.blur();
+
         // Display transactions
         displayTransactions(currentAccount.transactions);
 
