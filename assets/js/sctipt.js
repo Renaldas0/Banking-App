@@ -188,3 +188,37 @@ const transferMoney = function (event) {
     formInputAmount.blur();
 };
 formBtnTransfer.addEventListener('click', transferMoney);
+
+const requestLoan = function (event) {
+    event.preventDefault();
+
+    const loanAmount = formInputLoanAmount.value;
+    if (loanAmount <= currentAccount.balance * 0.1) {
+        alert('Loan Request approved and money has been transferred successfully.');
+        currentAccount.transactions.push(loanAmount);
+        updateUI();
+    } else {
+        alert('You need at least 10% of the requested amount in your account.')
+    }
+    console.log(loanAmount);
+}
+
+formBtnLoan.addEventListener('click', requestLoan);
+
+const closeAcc = function (event) {
+    event.preventDefault();
+
+    if (currentAccount.username === formCloseUser.value && currentAccount.pin === Number(formClosePin.value)) {
+
+        const index = accounts.findIndex(acc => acc.username === currentAccount.username);
+
+        // Delete the account from accounts array
+        accounts.splice(index, 1);
+        app.style.opacity = '0';
+        welcomeMsg.textContent = 'Login to start banking';
+    };
+    formCloseUser.value = formClosePin.value = '';
+    formClosePin.blur();
+};
+
+formBtnClose.addEventListener('click', closeAcc);
