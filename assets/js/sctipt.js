@@ -123,7 +123,6 @@ const calcDisplaySummary = function (acc) {
         .filter(tra => tra > 0)
         .map(deposit => (deposit * acc.interestRate) / 100)
         .filter((int, i, arr) => {
-            console.log(arr);
             return int >= 1;
         })
         .reduce((acc, curr) => acc + curr, 0);
@@ -195,14 +194,13 @@ const requestLoan = function (event) {
     const loanAmount = Number(formInputLoanAmount.value);
     if (loanAmount <= currentAccount.balance * 10) {
         currentAccount.transactions.push(loanAmount);
-        formInputLoanAmount.value = '';
-        formInputLoanAmount.blur();
         alert('Loan Request approved and money has been transferred successfully.');
         updateUI(currentAccount);
     } else {
         alert('You need at least 10% of the requested amount in your account.')
     }
-    console.log(loanAmount);
+    formInputLoanAmount.value = '';
+    formInputLoanAmount.blur();
 }
 
 formBtnLoan.addEventListener('click', requestLoan);
