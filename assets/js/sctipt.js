@@ -33,6 +33,7 @@ const account1 = {
     name: 'Renaldas Bendikas',
     currency: '€',
     pin: 1111,
+    interestRate: 1.2,
     transactions: [1000, -260, 2560, -400, 100, 250, -50, -45, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
@@ -43,6 +44,7 @@ const account2 = {
     name: 'Dwayne Johnson',
     currency: '$',
     pin: 2222,
+    interestRate: 1.8,
     transactions: [1000, -260, 2560, -400, -50, -45, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
@@ -53,6 +55,7 @@ const account3 = {
     name: 'Aurelia Wes',
     currency: '€',
     pin: 3333,
+    interestRate: .8,
     transactions: [-260, 250, -400, 100, 250, -50, -345, 800],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
@@ -63,6 +66,7 @@ const account4 = {
     name: 'Denis James Stewart',
     currency: '$',
     pin: 4444,
+    interestRate: 1.7,
     transactions: [2000, -460, 560, -100, 370, 150, -150, -425, 2400],
     transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
@@ -99,31 +103,42 @@ const displayTransactions = function (transactions) {
     });
 };
 
-const calcDisplayBalance = function (transactions) {
-    const balance = transactions.reduce((acc, curr) => acc + curr, 0);
-    balanceAmount.textContent = `${currentAccount.currency} ${balance}`;
+const calcDisplayBalance = function (account) {
+    account.balance = account.transactions.reduce((acc, curr) => acc + curr, 0);
+    balanceAmount.textContent = `${currentAccount.currency} ${account.balance}`;
 };
 
-const calcDisplaySummary = function (transactions) {
-    const incomes = transactions
+const calcDisplaySummary = function (acc) {
+    const incomes = acc.transactions
         .filter(curr => curr > 0)
         .reduce((acc, curr) => acc + curr, 0);
     summaryAmountIn.textContent = `${currentAccount.currency} ${incomes}`;
 
-    const expenses = transactions
+    const expenses = acc.transactions
         .filter(curr => curr < 0)
         .reduce((acc, curr) => acc + curr, 0);
     summaryAmountOut.textContent = `${currentAccount.currency} ${Math.abs(expenses)}`;
 
-    const interest = transactions
+    const interest = acc.transactions
         .filter(tra => tra > 0)
-        .map(deposit => deposit * 1.2 / 100)
+        .map(deposit => (deposit * acc.interestRate) / 100)
         .filter((int, i, arr) => {
             console.log(arr);
             return int >= 1;
         })
         .reduce((acc, curr) => acc + curr, 0);
     summaryAmountInterest.textContent = `${currentAccount.currency} ${interest}`;
+}
+
+const updateUI = function (acc) {
+    // Display transactions
+    displayTransactions(acc.transactions);
+
+    // Display Balance
+    calcDisplayBalance(acc);
+
+    // Display Summary
+    calcDisplaySummary(acc);
 }
 
 // Event Handlers
@@ -144,16 +159,32 @@ const authenticateUser = function (event) {
         loginInputUser.value = loginInputPin.value = '';
         loginInputPin.blur();
 
-        // Display transactions
-        displayTransactions(currentAccount.transactions);
-
-        // Display Balance
-        calcDisplayBalance(currentAccount.transactions);
-
-        // Display Summary
-        calcDisplaySummary(currentAccount.transactions);
+        updateUI(currentAccount);
     } else {
         alert('Incorrect details, account not found. Please try again')
     }
 }
 loginBtn.addEventListener('click', authenticateUser);
+
+const transferMoney = function (event) {
+    event.preventDefault();
+
+    const amountToTransfer = Number(formInputAmount.value);
+    const receiverAcc = accounts
+        .find(acc => acc.username === formInputTo.value);
+
+    if (amountToTransfer > 0 &&
+        receiverAcc &&
+        amountToTransfer <= currentAccount.balance &&
+        receiverAcc?.username !== currentAccount.username) {
+
+        // Performing the Transfer
+        currentAccount.transactions.push(-amountToTransfer);
+        receiverAcc.transactions.push(amountToTransfer);
+
+        updateUI(currentAccount);
+    };
+    formInputTo.value = formInputAmount.value = '';
+    formInputAmount.blur();
+};
+formBtnTransfer.addEventListener('click', transferMoney);

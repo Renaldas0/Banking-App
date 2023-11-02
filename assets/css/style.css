@@ -162,12 +162,12 @@ p {
     margin-right: 2.5rem;
 }
 
-.summary_value_in,
-.summary_value_interest {
+.summary_label_in,
+.summary_label_interest {
     color: var(--green);
 }
 
-.summary_value_out {
+.summary_label_out {
     color: var(--deep-blue);
 }
 
