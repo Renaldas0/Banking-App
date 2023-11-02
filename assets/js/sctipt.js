@@ -151,7 +151,7 @@ const authenticateUser = function (event) {
 
     if (currentAccount?.pin === Number(loginInputPin.value)) {
         // Display UI and welcome message
-        welcomeMsg.textContent = `Welcome back ${currentAccount.name.split(' ')[0]}!`;
+        welcomeMsg.textContent = `Welcome back, ${currentAccount.name.split(' ')[0]}!`;
         app.style.opacity = '100';
 
         // Clear input fields
@@ -192,11 +192,11 @@ const requestLoan = function (event) {
     event.preventDefault();
 
     const loanAmount = Number(formInputLoanAmount.value);
-    if (loanAmount <= currentAccount.balance * 10) {
+    if (loanAmount > 0 && loanAmount <= currentAccount.balance * 10) {
         currentAccount.transactions.push(loanAmount);
         alert('Loan Request approved and money has been transferred successfully.');
         updateUI(currentAccount);
-    } else {
+    } else if (loanAmount > currentAccount.balance * 10) {
         alert('You need at least 10% of the requested amount in your account.')
     }
     formInputLoanAmount.value = '';
