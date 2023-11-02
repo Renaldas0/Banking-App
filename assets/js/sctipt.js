@@ -192,11 +192,13 @@ formBtnTransfer.addEventListener('click', transferMoney);
 const requestLoan = function (event) {
     event.preventDefault();
 
-    const loanAmount = formInputLoanAmount.value;
-    if (loanAmount <= currentAccount.balance * 0.1) {
-        alert('Loan Request approved and money has been transferred successfully.');
+    const loanAmount = Number(formInputLoanAmount.value);
+    if (loanAmount <= currentAccount.balance * 10) {
         currentAccount.transactions.push(loanAmount);
-        updateUI();
+        formInputLoanAmount.value = '';
+        formInputLoanAmount.blur();
+        alert('Loan Request approved and money has been transferred successfully.');
+        updateUI(currentAccount);
     } else {
         alert('You need at least 10% of the requested amount in your account.')
     }
