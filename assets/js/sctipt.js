@@ -38,6 +38,7 @@ const formBtnLoan = document.querySelector('.form_btn_loan');
 const formCloseUser = document.querySelector('.form_close_user');
 const formClosePin = document.querySelector('.form_close_pin');
 const formBtnClose = document.querySelector('.form_btn_close');
+const sortBtn = document.querySelector('.sort');
 
 const account1 = {
     name: 'Renaldas Bendikas',
@@ -96,10 +97,12 @@ const createUsernames = function (accs) {
 
 createUsernames(accounts);
 
-const displayTransactions = function (transactions) {
+const displayTransactions = function (transactions, sort = false) {
     transactionContainer.innerHTML = '';
 
-    transactions.forEach(function (tra, i) {
+    const tra = sort ? transactions.slice().sort((a, b) => a - b) : transactions;
+
+    tra.forEach(function (tra, i) {
         const type = tra > 0 ? 'deposit' : 'withdrawal';
 
         const html = `
@@ -234,3 +237,11 @@ const closeAcc = function (event) {
 };
 
 formBtnClose.addEventListener('click', closeAcc);
+
+let sorted = false;
+
+sortBtn.addEventListener('click', function (event) {
+    event.preventDefault();
+    displayTransactions(currentAccount.transactions, !sorted);
+    sorted = !sorted;
+});
