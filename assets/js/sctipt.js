@@ -1,5 +1,15 @@
 'use strict'
 
+const now = new Date();
+
+const day = String(now.getDate()).padStart(2, '0');
+const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+const year = now.getFullYear();
+const hours = String(now.getHours()).padStart(2, '0');
+const minutes = String(now.getMinutes()).padStart(2, '0');
+const formattedDateTime = `As of... ${hours}:${minutes} (${day}/${month}/${year})`;
+
+
 const app = document.querySelector('.app');
 const welcomeMsg = document.querySelector('.heading');
 const loginInputUser = document.querySelector('.login_input_user');
@@ -152,6 +162,7 @@ const authenticateUser = function (event) {
     if (currentAccount?.pin === Number(loginInputPin.value)) {
         // Display UI and welcome message
         welcomeMsg.textContent = `Welcome back, ${currentAccount.name.split(' ')[0]}!`;
+        balanceDate.textContent = formattedDateTime;
         app.style.opacity = '100';
 
         // Clear input fields
@@ -215,6 +226,7 @@ const closeAcc = function (event) {
         // Delete the account from accounts array
         accounts.splice(index, 1);
         app.style.opacity = '0';
+        // landingPage.style.opacity = '100';
         welcomeMsg.textContent = 'Login to start banking';
     };
     formCloseUser.value = formClosePin.value = '';
