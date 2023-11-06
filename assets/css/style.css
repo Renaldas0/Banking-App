@@ -253,3 +253,66 @@ p {
 /* .timer {
     font-weight: 700;
 } */
+
+@media only screen and (max-width:670px) {
+    header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    header h1 {
+        padding: 0;
+    }
+
+    header form {
+        padding-right: 0;
+        padding-top: 1rem;
+    }
+
+    .app {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .balance {
+        margin: auto;
+    }
+
+    .balance_label {
+        text-align: center;
+    }
+
+    .transaction {
+        padding: 1.1rem 2.8rem;
+    }
+
+    .transaction_type {
+        font-size: .7rem;
+        padding: .1rem .8rem;
+        margin-right: auto;
+    }
+
+    .transaction_date,
+    .transaction_amount {
+        font-size: .8rem;
+    }
+
+    .summary_label,
+    .summary_value,
+    .sort {
+        font-size: .8rem;
+        margin-right: 0.6rem;
+    }
+
+    .operation_container h3 {
+        font-size: 1.3rem;
+    }
+
+    .operation_container form input {
+        font-size: 1.3rem;
+    }
+
+    .form_label {
+        font-size: 1rem;
+    }
+}
