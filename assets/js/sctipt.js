@@ -7,7 +7,7 @@ const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-ba
 const year = now.getFullYear();
 const hours = String(now.getHours()).padStart(2, '0');
 const minutes = String(now.getMinutes()).padStart(2, '0');
-const formattedDateTime = `As of... ${hours}:${minutes} (${day}/${month}/${year})`;
+const formattedDateTime = `As of -> ${hours}:${minutes} (${day}/${month}/${year})`;
 
 
 const app = document.querySelector('.app');
@@ -109,7 +109,7 @@ const displayTransactions = function (transactions, sort = false) {
         <div class="transaction">
                 <p class="transaction_type transaction_type_${type}">${i + 1} ${type}</p>
                 <p class="transaction_date">22/12/2023</p>
-                <p class="transaction_amount">${currentAccount.currency} ${tra}</p>
+                <p class="transaction_amount">${currentAccount.currency} ${tra.toFixed(2)}</p>
         </div>`;
 
         transactionContainer.insertAdjacentHTML('afterbegin', html);
@@ -118,19 +118,19 @@ const displayTransactions = function (transactions, sort = false) {
 
 const calcDisplayBalance = function (account) {
     account.balance = account.transactions.reduce((acc, curr) => acc + curr, 0);
-    balanceAmount.textContent = `${currentAccount.currency} ${account.balance}`;
+    balanceAmount.textContent = `${currentAccount.currency} ${account.balance.toFixed(2)}`;
 };
 
 const calcDisplaySummary = function (acc) {
     const incomes = acc.transactions
         .filter(curr => curr > 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountIn.textContent = `${currentAccount.currency} ${incomes}`;
+    summaryAmountIn.textContent = `${currentAccount.currency} ${incomes.toFixed(2)}`;
 
     const expenses = acc.transactions
         .filter(curr => curr < 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountOut.textContent = `${currentAccount.currency} ${Math.abs(expenses)}`;
+    summaryAmountOut.textContent = `${currentAccount.currency} ${Math.abs(expenses).toFixed(2)}`;
 
     const interest = acc.transactions
         .filter(tra => tra > 0)
@@ -139,7 +139,7 @@ const calcDisplaySummary = function (acc) {
             return int >= 1;
         })
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountInterest.textContent = `${currentAccount.currency} ${interest}`;
+    summaryAmountInterest.textContent = `${currentAccount.currency} ${interest.toFixed(2)}`;
 }
 
 const updateUI = function (acc) {
@@ -205,7 +205,8 @@ formBtnTransfer.addEventListener('click', transferMoney);
 const requestLoan = function (event) {
     event.preventDefault();
 
-    const loanAmount = Number(formInputLoanAmount.value);
+    const loanAmount = Math.floor(formInputLoanAmount.value);
+
     if (loanAmount > 0 && loanAmount <= currentAccount.balance * 10) {
         currentAccount.transactions.push(loanAmount);
         alert('Loan Request approved and money has been transferred successfully.');
