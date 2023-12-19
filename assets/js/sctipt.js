@@ -1,14 +1,5 @@
 'use strict'
 
-const now = new Date();
-
-const day = String(now.getDate()).padStart(2, '0');
-const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-const year = now.getFullYear();
-const hours = String(now.getHours()).padStart(2, '0');
-const minutes = String(now.getMinutes()).padStart(2, '0');
-const formattedDateTime = `As of -> ${hours}:${minutes} (${day}/${month}/${year})`;
-
 
 const app = document.querySelector('.app');
 const welcomeMsg = document.querySelector('.heading');
@@ -45,8 +36,8 @@ const account1 = {
     currency: '€',
     pin: 1111,
     interestRate: 1.2,
-    transactions: [1000, -260, 2560, -400, 100, 250, -50, -45, 2400],
-    transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
+    transactions: [1000, -260, 2560, -400, 100, 250, -50, -45],
+    transactionDates: ['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
         '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
@@ -57,10 +48,10 @@ const account2 = {
     pin: 2222,
     interestRate: 1.8,
     transactions: [1000, -260, 2560, -400, -50, -45, 2400],
-    transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
+    transactionDates: ['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
-        '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
+        '2020-03-08T14:11:59.604Z'],
 };
 const account3 = {
     name: 'Aurelia Wes',
@@ -68,7 +59,7 @@ const account3 = {
     pin: 3333,
     interestRate: .8,
     transactions: [-260, 250, -400, 100, 250, -50, -345, 800],
-    transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
+    transactionDates: ['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
         '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
@@ -78,11 +69,11 @@ const account4 = {
     currency: '$',
     pin: 4444,
     interestRate: 1.7,
-    transactions: [2000, -460, 560, -100, 370, 150, -150, -425, 2400],
-    transactionDates: (8)['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
+    transactions: [2000, -460, 560, -100, 370, 150, -425, 2400],
+    transactionDates: ['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
-        '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
+        '2020-03-08T14:11:59.604Z'],
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -97,19 +88,27 @@ const createUsernames = function (accs) {
 
 createUsernames(accounts);
 
-const displayTransactions = function (transactions, sort = false) {
+const displayTransactions = function (account, sort = false) {
     transactionContainer.innerHTML = '';
 
-    const tra = sort ? transactions.slice().sort((a, b) => a - b) : transactions;
+    const movs = sort
+        ? account.transactions.slice().sort((a, b) => a - b)
+        : account.transactions;
 
-    tra.forEach(function (tra, i) {
-        const type = tra > 0 ? 'deposit' : 'withdrawal';
+    movs.forEach(function (mov, i) {
+        const type = mov > 0 ? 'deposit' : 'withdrawal';
+
+        const date = new Date(account.transactionDates[i]);
+        const day = `${date.getDate()}`.padStart(2, '0');
+        const month = `${date.getMonth() + 1}`.padStart(2, '0');
+        const year = date.getFullYear();
+        const displayDate = `${day}/${month}/${year}`;
 
         const html = `
         <div class="transaction">
                 <p class="transaction_type transaction_type_${type}">${i + 1} ${type}</p>
-                <p class="transaction_date">22/12/2023</p>
-                <p class="transaction_amount">${currentAccount.currency} ${tra.toFixed(2)}</p>
+                <p class="transaction_date">${displayDate}</p>
+                <p class="transaction_amount">${currentAccount.currency} ${mov.toFixed(2)}</p>
         </div>`;
 
         transactionContainer.insertAdjacentHTML('afterbegin', html);
@@ -144,7 +143,7 @@ const calcDisplaySummary = function (acc) {
 
 const updateUI = function (acc) {
     // Display transactions
-    displayTransactions(acc.transactions);
+    displayTransactions(acc);
 
     // Display Balance
     calcDisplayBalance(acc);
@@ -158,6 +157,15 @@ let currentAccount;
 
 const authenticateUser = function (event) {
     event.preventDefault();
+
+    const now = new Date();
+
+    const day = String(now.getDate()).padStart(2, '0');
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = now.getFullYear();
+    const hours = String(now.getHours()).padStart(2, '0');
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    const formattedDateTime = `As of ${hours}:${minutes} (${day}/${month}/${year})`;
 
     // Find the account with the entered username
     currentAccount = accounts.find(acc => acc.username === loginInputUser.value);
@@ -195,6 +203,9 @@ const transferMoney = function (event) {
         currentAccount.transactions.push(-amountToTransfer);
         receiverAcc.transactions.push(amountToTransfer);
 
+        // Add transfer date
+        currentAccount.transactionDates.push(new Date().toISOString());
+        receiverAcc.transactionDates.push(new Date().toISOString());
         updateUI(currentAccount);
     };
     formInputTo.value = formInputAmount.value = '';
@@ -210,6 +221,10 @@ const requestLoan = function (event) {
     if (loanAmount > 0 && loanAmount <= currentAccount.balance * 10) {
         currentAccount.transactions.push(loanAmount);
         alert('Loan Request approved and money has been transferred successfully.');
+
+        // Add loan date
+        currentAccount.transactionDates.push(new Date().toISOString());
+
         updateUI(currentAccount);
     } else if (loanAmount > currentAccount.balance * 10) {
         alert('You need at least 10% of the requested amount in your account.')
@@ -243,6 +258,6 @@ let sorted = false;
 
 sortBtn.addEventListener('click', function (event) {
     event.preventDefault();
-    displayTransactions(currentAccount.transactions, !sorted);
+    displayTransactions(currentAccount, !sorted);
     sorted = !sorted;
 });
