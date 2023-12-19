@@ -36,6 +36,10 @@ header h1 {
     padding-left: 2rem;
 }
 
+.bank-icon {
+    font-size: 3rem;
+}
+
 .icon i {
     font-size: 3rem;
 }
@@ -253,6 +257,18 @@ p {
 /* .timer {
     font-weight: 700;
 } */
+
+@media screen and (min-width:1500px) {
+    .container {
+        padding-inline: 10%;
+    }
+}
+
+@media only screen and (max-width:720px) {
+    .bank-icon {
+        display: none !important;
+    }
+}
 
 @media only screen and (max-width:670px) {
     header {
