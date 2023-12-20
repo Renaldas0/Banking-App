@@ -38,9 +38,9 @@ const account1 = {
     interestRate: 1.2,
     transactions: [1000, -260, 2560, -400, 100, 250, -50, -45],
     transactionDates: ['2019-01-28T09:15:04.904Z', '2019-04-01T10:17:24.185Z',
-        '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
-        '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
-        '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
+        '2023-11-27T17:01:17.194Z', '2023-12-02T23:36:17.929Z',
+        '2023-12-05T21:31:17.178Z', '2023-12-17T07:42:02.383Z',
+        '2023-12-19T14:11:59.604Z', '2023-12-20T10:51:36.790Z'],
 };
 const account2 = {
     name: 'Dwayne Johnson',
@@ -88,6 +88,23 @@ const createUsernames = function (accs) {
 
 createUsernames(accounts);
 
+function formatTransactionDate(date) {
+
+    function calcDaysPassed(date1, date2) {
+        return Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
+    }
+
+    const daysPassed = calcDaysPassed(new Date(), date);
+    if (daysPassed === 0) return 'Today';
+    if (daysPassed === 1) return 'Yesterday';
+    if (daysPassed <= 7) return `${daysPassed} days ago`;
+
+    const day = `${date.getDate()}`.padStart(2, '0');
+    const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    const year = date.getFullYear();
+    return `${day}/${month}/${year}`;
+}
+
 const displayTransactions = function (account, sort = false) {
     transactionContainer.innerHTML = '';
 
@@ -99,10 +116,7 @@ const displayTransactions = function (account, sort = false) {
         const type = mov > 0 ? 'deposit' : 'withdrawal';
 
         const date = new Date(account.transactionDates[i]);
-        const day = `${date.getDate()}`.padStart(2, '0');
-        const month = `${date.getMonth() + 1}`.padStart(2, '0');
-        const year = date.getFullYear();
-        const displayDate = `${day}/${month}/${year}`;
+        const displayDate = formatTransactionDate(date);
 
         const html = `
         <div class="transaction">
@@ -159,13 +173,15 @@ const authenticateUser = function (event) {
     event.preventDefault();
 
     const now = new Date();
-
-    const day = String(now.getDate()).padStart(2, '0');
-    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are zero-based
-    const year = now.getFullYear();
-    const hours = String(now.getHours()).padStart(2, '0');
-    const minutes = String(now.getMinutes()).padStart(2, '0');
-    const formattedDateTime = `As of ${hours}:${minutes} (${day}/${month}/${year})`;
+    const options = {
+        hour: 'numeric',
+        minute: 'numeric',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+        weekday: 'long',
+    }
+    const formattedDateTime = new Intl.DateTimeFormat('en-GB', options).format(now);
 
     // Find the account with the entered username
     currentAccount = accounts.find(acc => acc.username === loginInputUser.value);
@@ -173,7 +189,7 @@ const authenticateUser = function (event) {
     if (currentAccount?.pin === Number(loginInputPin.value)) {
         // Display UI and welcome message
         welcomeMsg.textContent = `Welcome back, ${currentAccount.name.split(' ')[0]}!`;
-        balanceDate.textContent = formattedDateTime;
+        balanceDate.textContent = `As of ${formattedDateTime}`;
         app.style.opacity = '100';
 
         // Clear input fields
