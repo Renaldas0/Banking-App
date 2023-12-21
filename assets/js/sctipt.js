@@ -33,7 +33,7 @@ const sortBtn = document.querySelector('.sort');
 
 const account1 = {
     name: 'Renaldas Bendikas',
-    currency: '€',
+    currency: 'EUR',
     pin: 1111,
     interestRate: 1.2,
     transactions: [1000, -260, 2560, -400, 100, 250, -50, -45],
@@ -41,10 +41,11 @@ const account1 = {
         '2023-11-27T17:01:17.194Z', '2023-12-02T23:36:17.929Z',
         '2023-12-05T21:31:17.178Z', '2023-12-17T07:42:02.383Z',
         '2023-12-19T14:11:59.604Z', '2023-12-20T10:51:36.790Z'],
+    locale: 'en-GB'
 };
 const account2 = {
     name: 'Dwayne Johnson',
-    currency: '$',
+    currency: 'USD',
     pin: 2222,
     interestRate: 1.8,
     transactions: [1000, -260, 2560, -400, -50, -45, 2400],
@@ -52,10 +53,11 @@ const account2 = {
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
         '2020-03-08T14:11:59.604Z'],
+    locale: 'en-US'
 };
 const account3 = {
     name: 'Aurelia Wes',
-    currency: '€',
+    currency: 'EUR',
     pin: 3333,
     interestRate: .8,
     transactions: [-260, 250, -400, 100, 250, -50, -345, 800],
@@ -63,10 +65,11 @@ const account3 = {
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
         '2020-03-08T14:11:59.604Z', '2020-03-12T10:51:36.790Z'],
+    locale: 'en-GB'
 };
 const account4 = {
     name: 'Denis James Stewart',
-    currency: '$',
+    currency: 'USD',
     pin: 4444,
     interestRate: 1.7,
     transactions: [2000, -460, 560, -100, 370, 150, -425, 2400],
@@ -74,6 +77,7 @@ const account4 = {
         '2019-05-27T17:01:17.194Z', '2019-07-11T23:36:17.929Z',
         '2019-11-18T21:31:17.178Z', '2019-12-23T07:42:02.383Z',
         '2020-03-08T14:11:59.604Z'],
+    locale: 'en-GB'
 };
 
 const accounts = [account1, account2, account3, account4];
@@ -88,7 +92,7 @@ const createUsernames = function (accs) {
 
 createUsernames(accounts);
 
-function formatTransactionDate(date) {
+function formatTransactionDate(date, locale) {
 
     function calcDaysPassed(date1, date2) {
         return Math.round(Math.abs(date2 - date1) / (1000 * 60 * 60 * 24));
@@ -99,11 +103,19 @@ function formatTransactionDate(date) {
     if (daysPassed === 1) return 'Yesterday';
     if (daysPassed <= 7) return `${daysPassed} days ago`;
 
-    const day = `${date.getDate()}`.padStart(2, '0');
-    const month = `${date.getMonth() + 1}`.padStart(2, '0');
-    const year = date.getFullYear();
-    return `${day}/${month}/${year}`;
+    // const day = `${date.getDate()}`.padStart(2, '0');
+    // const month = `${date.getMonth() + 1}`.padStart(2, '0');
+    // const year = date.getFullYear();
+    // return `${day}/${month}/${year}`;
+    return new Intl.DateTimeFormat(locale).format(date);
 }
+
+function formatCurrency(value, locale, currency) {
+    return new Intl.NumberFormat(locale, {
+        style: 'currency',
+        currency: currency
+    }).format(value);
+};
 
 const displayTransactions = function (account, sort = false) {
     transactionContainer.innerHTML = '';
@@ -116,13 +128,15 @@ const displayTransactions = function (account, sort = false) {
         const type = mov > 0 ? 'deposit' : 'withdrawal';
 
         const date = new Date(account.transactionDates[i]);
-        const displayDate = formatTransactionDate(date);
+        const displayDate = formatTransactionDate(date, account.locale);
+
+        const formattedTransaction = formatCurrency(mov, account.locale, account.currency);
 
         const html = `
         <div class="transaction">
                 <p class="transaction_type transaction_type_${type}">${i + 1} ${type}</p>
                 <p class="transaction_date">${displayDate}</p>
-                <p class="transaction_amount">${currentAccount.currency} ${mov.toFixed(2)}</p>
+                <p class="transaction_amount">${formattedTransaction}</p>
         </div>`;
 
         transactionContainer.insertAdjacentHTML('afterbegin', html);
@@ -131,19 +145,20 @@ const displayTransactions = function (account, sort = false) {
 
 const calcDisplayBalance = function (account) {
     account.balance = account.transactions.reduce((acc, curr) => acc + curr, 0);
-    balanceAmount.textContent = `${currentAccount.currency} ${account.balance.toFixed(2)}`;
+
+    balanceAmount.textContent = formatCurrency(account.balance, account.locale, account.currency);
 };
 
 const calcDisplaySummary = function (acc) {
     const incomes = acc.transactions
         .filter(curr => curr > 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountIn.textContent = `${currentAccount.currency} ${incomes.toFixed(2)}`;
+    summaryAmountIn.textContent = formatCurrency(incomes, acc.locale, acc.currency)
 
     const expenses = acc.transactions
         .filter(curr => curr < 0)
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountOut.textContent = `${currentAccount.currency} ${Math.abs(expenses).toFixed(2)}`;
+    summaryAmountOut.textContent = formatCurrency(Math.abs(expenses), acc.locale, acc.currency)
 
     const interest = acc.transactions
         .filter(tra => tra > 0)
@@ -152,7 +167,7 @@ const calcDisplaySummary = function (acc) {
             return int >= 1;
         })
         .reduce((acc, curr) => acc + curr, 0);
-    summaryAmountInterest.textContent = `${currentAccount.currency} ${interest.toFixed(2)}`;
+    summaryAmountInterest.textContent = formatCurrency(interest, acc.locale, acc.currency)
 }
 
 const updateUI = function (acc) {
@@ -172,24 +187,24 @@ let currentAccount;
 const authenticateUser = function (event) {
     event.preventDefault();
 
-    const now = new Date();
-    const options = {
-        hour: 'numeric',
-        minute: 'numeric',
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric',
-        weekday: 'long',
-    }
-    const formattedDateTime = new Intl.DateTimeFormat('en-GB', options).format(now);
-
     // Find the account with the entered username
     currentAccount = accounts.find(acc => acc.username === loginInputUser.value);
 
     if (currentAccount?.pin === Number(loginInputPin.value)) {
         // Display UI and welcome message
         welcomeMsg.textContent = `Welcome back, ${currentAccount.name.split(' ')[0]}!`;
-        balanceDate.textContent = `As of ${formattedDateTime}`;
+
+        const now = new Date();
+        const options = {
+            hour: 'numeric',
+            minute: 'numeric',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            weekday: 'long',
+        }
+
+        balanceDate.textContent = new Intl.DateTimeFormat(currentAccount.locale, options).format(now);
         app.style.opacity = '100';
 
         // Clear input fields
