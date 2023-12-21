@@ -244,26 +244,32 @@ const transferMoney = function (event) {
 };
 formBtnTransfer.addEventListener('click', transferMoney);
 
+
 const requestLoan = function (event) {
     event.preventDefault();
 
     const loanAmount = Math.floor(formInputLoanAmount.value);
 
     if (loanAmount > 0 && loanAmount <= currentAccount.balance * 10) {
-        currentAccount.transactions.push(loanAmount);
-        alert('Loan Request approved and money has been transferred successfully.');
+        setTimeout(function () {
+            currentAccount.transactions.push(loanAmount);
+            alert('Loan Request approved and money has been transferred successfully.');
 
-        // Add loan date
-        currentAccount.transactionDates.push(new Date().toISOString());
+            // Add loan date
+            currentAccount.transactionDates.push(new Date().toISOString());
 
-        updateUI(currentAccount);
-    } else if (loanAmount > currentAccount.balance * 10) {
+            updateUI(currentAccount)
+        }, 2500)
+    }
+    if (loanAmount > currentAccount.balance * 10) {
         alert('You need at least 10% of the requested amount in your account.')
+
     }
     formInputLoanAmount.value = '';
     formInputLoanAmount.blur();
-}
+    alert('Processing loan request');
 
+}
 formBtnLoan.addEventListener('click', requestLoan);
 
 const closeAcc = function (event) {
