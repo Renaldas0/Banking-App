@@ -184,23 +184,34 @@ const updateUI = function (acc) {
 }
 
 function startLogoutTimer() {
-    // Set time to 5 minutes
-    let time = 100;
+    function tick() {
+        const min = String(Math.trunc(time / 60)).padStart(2, 0);
+        const sec = String(time % 60).padStart(2, 0);
 
-    // Call the timer every second
-    setInterval(() => {
         // in each call, print the remaining time to the UI
-        labelTimer.textContent = time;
+        labelTimer.textContent = `${min}:${sec}`;
 
+        // When 0 seconds, stop timer and logout user
+        if (time === 0) {
+            clearInterval(timer);
+            welcomeMsg.textContent = "Log in to start banking";
+            app.style.opacity = '0';
+        }
         // Decrease 1 second
         time--;
-        // When 0 seconds, stop timer and logout user
+    };
 
-    }, 1000);
+    // Set time to 5 minutes
+    let time = 300;
+
+    // Call the timer every second
+    tick();
+    const timer = setInterval(tick, 1000);
+    return timer;
 };
 
 // Event Handlers
-let currentAccount;
+let currentAccount, timer;
 
 const authenticateUser = function (event) {
     event.preventDefault();
@@ -229,7 +240,8 @@ const authenticateUser = function (event) {
         loginInputUser.value = loginInputPin.value = '';
         loginInputPin.blur();
 
-        startLogoutTimer();
+        if (timer) clearInterval(timer);
+        timer = startLogoutTimer();
 
         updateUI(currentAccount);
     } else {
@@ -257,11 +269,18 @@ const transferMoney = function (event) {
         // Add transfer date
         currentAccount.transactionDates.push(new Date().toISOString());
         receiverAcc.transactionDates.push(new Date().toISOString());
+
         updateUI(currentAccount);
+
+        // Reset timer
+        clearInterval(timer);
+        timer = startLogoutTimer();
     };
+
     formInputTo.value = formInputAmount.value = '';
     formInputAmount.blur();
 };
+
 formBtnTransfer.addEventListener('click', transferMoney);
 
 
@@ -279,6 +298,10 @@ const requestLoan = function (event) {
             currentAccount.transactionDates.push(new Date().toISOString());
 
             updateUI(currentAccount)
+
+            // Reset timer
+            clearInterval(timer);
+            timer = startLogoutTimer();
         }, 2500)
     }
     if (loanAmount > currentAccount.balance * 10) {
