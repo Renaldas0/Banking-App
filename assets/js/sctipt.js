@@ -31,6 +31,8 @@ const formClosePin = document.querySelector('.form_close_pin');
 const formBtnClose = document.querySelector('.form_btn_close');
 const sortBtn = document.querySelector('.sort');
 
+const labelTimer = document.querySelector('.timer');
+
 const account1 = {
     name: 'Renaldas Bendikas',
     currency: 'EUR',
@@ -181,6 +183,22 @@ const updateUI = function (acc) {
     calcDisplaySummary(acc);
 }
 
+function startLogoutTimer() {
+    // Set time to 5 minutes
+    let time = 100;
+
+    // Call the timer every second
+    setInterval(() => {
+        // in each call, print the remaining time to the UI
+        labelTimer.textContent = time;
+
+        // Decrease 1 second
+        time--;
+        // When 0 seconds, stop timer and logout user
+
+    }, 1000);
+};
+
 // Event Handlers
 let currentAccount;
 
@@ -210,6 +228,8 @@ const authenticateUser = function (event) {
         // Clear input fields
         loginInputUser.value = loginInputPin.value = '';
         loginInputPin.blur();
+
+        startLogoutTimer();
 
         updateUI(currentAccount);
     } else {
