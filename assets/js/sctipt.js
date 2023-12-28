@@ -31,6 +31,8 @@ const formClosePin = document.querySelector('.form_close_pin');
 const formBtnClose = document.querySelector('.form_btn_close');
 const sortBtn = document.querySelector('.sort');
 
+const labelTimer = document.querySelector('.timer');
+
 const account1 = {
     name: 'Renaldas Bendikas',
     currency: 'EUR',
@@ -181,8 +183,35 @@ const updateUI = function (acc) {
     calcDisplaySummary(acc);
 }
 
+function startLogoutTimer() {
+    function tick() {
+        const min = String(Math.trunc(time / 60)).padStart(2, 0);
+        const sec = String(time % 60).padStart(2, 0);
+
+        // in each call, print the remaining time to the UI
+        labelTimer.textContent = `${min}:${sec}`;
+
+        // When 0 seconds, stop timer and logout user
+        if (time === 0) {
+            clearInterval(timer);
+            welcomeMsg.textContent = "Log in to start banking";
+            app.style.opacity = '0';
+        }
+        // Decrease 1 second
+        time--;
+    };
+
+    // Set time to 5 minutes
+    let time = 300;
+
+    // Call the timer every second
+    tick();
+    const timer = setInterval(tick, 1000);
+    return timer;
+};
+
 // Event Handlers
-let currentAccount;
+let currentAccount, timer;
 
 const authenticateUser = function (event) {
     event.preventDefault();
@@ -211,6 +240,9 @@ const authenticateUser = function (event) {
         loginInputUser.value = loginInputPin.value = '';
         loginInputPin.blur();
 
+        if (timer) clearInterval(timer);
+        timer = startLogoutTimer();
+
         updateUI(currentAccount);
     } else {
         alert('Incorrect details, account not found. Please try again')
@@ -237,11 +269,18 @@ const transferMoney = function (event) {
         // Add transfer date
         currentAccount.transactionDates.push(new Date().toISOString());
         receiverAcc.transactionDates.push(new Date().toISOString());
+
         updateUI(currentAccount);
+
+        // Reset timer
+        clearInterval(timer);
+        timer = startLogoutTimer();
     };
+
     formInputTo.value = formInputAmount.value = '';
     formInputAmount.blur();
 };
+
 formBtnTransfer.addEventListener('click', transferMoney);
 
 
@@ -259,6 +298,10 @@ const requestLoan = function (event) {
             currentAccount.transactionDates.push(new Date().toISOString());
 
             updateUI(currentAccount)
+
+            // Reset timer
+            clearInterval(timer);
+            timer = startLogoutTimer();
         }, 2500)
     }
     if (loanAmount > currentAccount.balance * 10) {
