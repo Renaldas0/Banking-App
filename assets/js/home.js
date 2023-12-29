@@ -9,6 +9,8 @@ const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
 const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
+const section2 = document.querySelector('#section--2');
+const section3 = document.querySelector('#section--3');
 
 const openModal = function (e) {
     e.preventDefault();
@@ -33,6 +35,8 @@ document.addEventListener('keydown', function (e) {
     }
 });
 
+// PAGE Navgiation
+
 btnScrollTo.addEventListener('click', function (e) {
     const s1coords = section1.getBoundingClientRect();
 
@@ -46,3 +50,27 @@ btnScrollTo.addEventListener('click', function (e) {
 
     section1.scrollIntoView({ behavior: 'smooth' });
 });
+
+document.querySelectorAll('.nav__link').forEach(function (el) {
+    el.addEventListener('click', function (e) {
+        e.preventDefault();
+        const id = this.getAttribute('href');
+        document.querySelector(id).scrollIntoView({ behavior: 'smooth' });
+    });
+});
+
+// const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
+// const randomColor = () => `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+
+// document.querySelector('.nav').addEventListener('click', function (e) {
+//     this.style.backgroundColor = randomColor();
+//     console.log('NAV', e.target)
+// })
+// document.querySelector('.nav__links').addEventListener('click', function (e) {
+//     this.style.backgroundColor = randomColor();
+//     console.log('nav-links', e.target)
+// })
+// document.querySelector('.nav__link').addEventListener('click', function (e) {
+//     this.style.backgroundColor = randomColor();
+//     console.log('LINK', e.target)
+// })
