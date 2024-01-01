@@ -36,17 +36,8 @@ document.addEventListener('keydown', function (e) {
 });
 
 // PAGE Navgiation
-
 btnScrollTo.addEventListener('click', function (e) {
     const s1coords = section1.getBoundingClientRect();
-
-    // window.scrollTo(s1coords.left + window.pageXOffSet, s1coords.top + window.pageYOffset);
-
-    // window.scrollTo({
-    //     left: s1coords.left + window.pageXOffSet,
-    //     top: s1coords.top + window.pageYOffset,
-    //     behavior: 'smooth'
-    // });
 
     section1.scrollIntoView({ behavior: 'smooth' });
 });
@@ -59,18 +50,22 @@ document.querySelectorAll('.nav__link').forEach(function (el) {
     });
 });
 
-// const randomInt = (min, max) => Math.floor(Math.random() * (max - min + 1) + min)
-// const randomColor = () => `rgb(${randomInt(0, 255)}, ${randomInt(0, 255)}, ${randomInt(0, 255)})`;
+// Tabbed Components
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
 
-// document.querySelector('.nav').addEventListener('click', function (e) {
-//     this.style.backgroundColor = randomColor();
-//     console.log('NAV', e.target)
-// })
-// document.querySelector('.nav__links').addEventListener('click', function (e) {
-//     this.style.backgroundColor = randomColor();
-//     console.log('nav-links', e.target)
-// })
-// document.querySelector('.nav__link').addEventListener('click', function (e) {
-//     this.style.backgroundColor = randomColor();
-//     console.log('LINK', e.target)
-// })
+tabsContainer.addEventListener('click', function (e) {
+    const clicked = e.target.closest('.operations__tab');
+    if (!clicked) return;
+
+    // Remove active classes from tab content and tab
+    tabs.forEach(tab => tab.classList.remove('operations__tab--active'));
+    tabsContent.forEach(c => c.classList.remove('operations__content--active'));
+
+    // Activate tab
+    clicked.classList.add('operations__tab--active');
+
+    // Activate content area
+    document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
+});
