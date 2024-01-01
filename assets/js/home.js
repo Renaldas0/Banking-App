@@ -1,8 +1,6 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
+const nav = document.querySelector('.nav');
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
@@ -11,6 +9,9 @@ const btnScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 const section2 = document.querySelector('#section--2');
 const section3 = document.querySelector('#section--3');
+const tabs = document.querySelectorAll('.operations__tab');
+const tabsContainer = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
 
 const openModal = function (e) {
     e.preventDefault();
@@ -51,9 +52,6 @@ document.querySelectorAll('.nav__link').forEach(function (el) {
 });
 
 // Tabbed Components
-const tabs = document.querySelectorAll('.operations__tab');
-const tabsContainer = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
 
 tabsContainer.addEventListener('click', function (e) {
     const clicked = e.target.closest('.operations__tab');
@@ -69,3 +67,22 @@ tabsContainer.addEventListener('click', function (e) {
     // Activate content area
     document.querySelector(`.operations__content--${clicked.dataset.tab}`).classList.add('operations__content--active')
 });
+
+
+const handleHover = function (e) {
+    if (e.target.classList.contains('nav__link')) {
+        const link = e.target;
+        const siblings = link.closest('.nav').querySelectorAll('.nav__link');
+        const logo = link.closest('.nav').querySelector('img');
+
+        siblings.forEach(el => {
+            if (el !== link) el.style.opacity = this;
+        })
+        logo.style.opacity = this;
+    }
+}
+
+// Passing an "argument" into handler
+nav.addEventListener('mouseover', handleHover.bind(0.5));
+
+nav.addEventListener('mouseout', handleHover.bind(1));
